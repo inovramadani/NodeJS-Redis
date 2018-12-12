@@ -27,17 +27,19 @@ function postBuyers (req, res, opts) {
         return send(req, res, { message: 'request is not valid' })
       }
 
-      if (!isEmpty(bodyJSON) && Array.isArray(bodyJSON)) {
-        bodyJSON.forEach(function (buyer) {
+      if (!isEmpty(bodyJSON)) {
+        if (Array.isArray(bodyJSON)) {
+          bodyJSON.forEach(function (buyer) {
+            client.set(buyer.id, JSON.stringify(buyer.offers))
+
+            addLocationToDB(buyer)
+          })
+        } else {
+          const buyer = bodyJSON
           client.set(buyer.id, JSON.stringify(buyer.offers))
 
           addLocationToDB(buyer)
-        })
-      } else {
-        const buyer = bodyJSON
-        client.set(buyer.id, JSON.stringify(buyer.offers))
-
-        addLocationToDB(buyer)
+        }
       }
 
       res.statusCode = 201
@@ -49,6 +51,7 @@ function postBuyers (req, res, opts) {
   })
 }
 
+// TODO: change this if-else, else only to cater contentful JSON
 // create location based record in DB for easy highest valued location retrieval
 function addLocationToDB (buyer) {
   buyer.offers.forEach(function (offer) {
@@ -65,7 +68,7 @@ function addLocationToDB (buyer) {
             }
 
             client.lrange(`${state}.${device}.${day}.${hour}`, 0, 0, function (err, result) {
-              if (err) console.log(err)
+              if (err) return console.error(err)
 
               if (result.length > 0) {
                 const data = JSON.parse(result[0])
@@ -89,7 +92,7 @@ function getBuyers (req, res, opts) {
   const buyerId = opts.params.id
 
   client.get(buyerId, function (err, result) {
-    if (err) return console.log(err)
+    if (err) return console.error(err)
 
     if (result !== null || !isEmpty(result)) {
       const data = { id: buyerId, offers: JSON.parse(result) }
@@ -108,7 +111,7 @@ function getRoute (req, res, opts) {
   const hour = time.getUTCHours()
 
   client.lrange(`${state}.${device}.${day}.${hour}`, 0, 0, function (err, result) {
-    if (err) console.log(err)
+    if (err) return console.error(err)
 
     if (result !== null || !isEmpty(result)) {
       const data = JSON.parse(result)
