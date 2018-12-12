@@ -1,7 +1,8 @@
 var client = require('./redis')
 var lodash = require('lodash')
-var isEmpty = lodash.isEmpty
 var send = require('send-data/json')
+
+var isEmpty = lodash.isEmpty
 
 module.exports = {
   postBuyers: postBuyers,
