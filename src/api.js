@@ -51,43 +51,6 @@ function postBuyers (req, res, opts) {
   })
 }
 
-// TODO: change this if-else, else only to cater contentful JSON
-// create location based record in DB for easy highest valued location retrieval
-function addLocationToDB (buyer) {
-  buyer.offers.forEach(function (offer) {
-    const criteria = offer.criteria
-
-    criteria.state.forEach(function (state) {
-      criteria.device.forEach(function (device) {
-        criteria.day.forEach(function (day) {
-          criteria.hour.forEach(function (hour) {
-            const record = {
-              buyerId: buyer.id,
-              value: offer.value,
-              location: offer.location
-            }
-
-            client.lrange(`${state}.${device}.${day}.${hour}`, 0, 0, function (err, result) {
-              if (err) return console.error(err)
-
-              if (result.length > 0) {
-                const data = JSON.parse(result[0])
-                if (record.value > data.value) {
-                  client.lpush(`${state}.${device}.${day}.${hour}`, JSON.stringify(record))
-                } else {
-                  client.rpush(`${state}.${device}.${day}.${hour}`, JSON.stringify(record))
-                }
-              } else {
-                client.lpush(`${state}.${device}.${day}.${hour}`, JSON.stringify(record))
-              }
-            })
-          })
-        })
-      })
-    })
-  })
-}
-
 function getBuyers (req, res, opts) {
   const buyerId = opts.params.id
 
@@ -122,6 +85,42 @@ function getRoute (req, res, opts) {
       res.statusCode = 404
       return send(req, res, { message: 'not found' })
     }
+  })
+}
+
+// create location based record in DB for easy highest valued location retrieval
+function addLocationToDB (buyer) {
+  buyer.offers.forEach(function (offer) {
+    const criteria = offer.criteria
+
+    criteria.state.forEach(function (state) {
+      criteria.device.forEach(function (device) {
+        criteria.day.forEach(function (day) {
+          criteria.hour.forEach(function (hour) {
+            const record = {
+              buyerId: buyer.id,
+              value: offer.value,
+              location: offer.location
+            }
+
+            client.lrange(`${state}.${device}.${day}.${hour}`, 0, 0, function (err, result) {
+              if (err) return console.error(err)
+
+              if (result.length > 0) {
+                const data = JSON.parse(result[0])
+                if (record.value > data.value) {
+                  client.lpush(`${state}.${device}.${day}.${hour}`, JSON.stringify(record))
+                } else {
+                  client.rpush(`${state}.${device}.${day}.${hour}`, JSON.stringify(record))
+                }
+              } else {
+                client.lpush(`${state}.${device}.${day}.${hour}`, JSON.stringify(record))
+              }
+            })
+          })
+        })
+      })
+    })
   })
 }
 
