@@ -18,15 +18,11 @@
     "tape": "^4.9.1"
   },
   "dependencies": {
-    "corsify": "^2.1.0",
-    "flat": "^4.1.0",
     "http": "0.0.0",
     "http-hash-router": "^2.0.1",
     "lodash": "^4.17.11",
-    "nodemon": "^1.18.8",
     "querystring": "^0.2.0",
     "redis": "2.7.1",
-    "redis-jsonify": "^1.2.0",
     "send-data": "^8.0.0",
     "url": "^0.11.0"
   },
