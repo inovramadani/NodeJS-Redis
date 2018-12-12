@@ -1,0 +1,45 @@
+{
+  "name": "upwork-code-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "node test/index.js && standard"
+  },
+  "keywords": [],
+  "author": "David Guttman <david@guttman.io> (http://davidguttman.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "fakeredis": "^2.0.0",
+    "map-async": "^0.1.1",
+    "servertest": "^1.2.1",
+    "standard": "^8.6.0",
+    "tape": "^4.9.1"
+  },
+  "dependencies": {
+    "corsify": "^2.1.0",
+    "flat": "^4.1.0",
+    "http": "0.0.0",
+    "http-hash-router": "^2.0.1",
+    "lodash": "^4.17.11",
+    "nodemon": "^1.18.8",
+    "querystring": "^0.2.0",
+    "redis": "2.7.1",
+    "redis-jsonify": "^1.2.0",
+    "send-data": "^8.0.0",
+    "url": "^0.11.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Interlincx/challenge-buyer-router.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Interlincx/challenge-buyer-router/issues"
+  },
+  "homepage": "https://github.com/Interlincx/challenge-buyer-router#readme",
+  "description": "This challenge is to route traffic according to buyer rules. You will set up an http server that can create and retrieve \"buyers\". The http server will also route traffic according to the preferences of the buyers."
+}
